@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Gigs</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    input, textarea {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .edit-btn { background: #007bff; }
+    .edit-btn:hover { background: #0069d9; }
+
+    .delete-btn { background: #dc3545; }
+    .delete-btn:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Manage Gigs</h1>
+
+    <!-- Add Gig Form -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="title">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Price</label>
+        <input type="number" id="price">
+      </div>
+      <div class="form-group">
+        <label>UserID</label>
+        <input type="number" id="userId">
+      </div>
+      <div class="form-group">
+        <label>CategoryID</label>
+        <input type="number" id="categoryId">
+      </div>
+      <div class="form-group" style="align-self:flex-end;">
+        <button onclick="addGig()">Add Gig</button>
+      </div>
+    </div>
+
+    <!-- Gigs Table -->
+    <h2>All Gigs</h2>
+    <table id="gigsTable">
+      <thead>
+        <tr>
+          <th>GigID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>UserID</th>
+          <th>CategoryID</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function fetchGigs() {
+      const res = await fetch("http://localhost:5000/gigs");
+      const data = await res.json();
+      const tbody = document.querySelector("#gigsTable tbody");
+      tbody.innerHTML = "";
+      data.forEach(gig => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${gig.GigID}</td>
+            <td>${gig.Title}</td>
+            <td>${gig.Description}</td>
+            <td><input type="number" id="price-${gig.GigID}" value="${gig.Price}"></td>
+            <td>${gig.UserID}</td>
+            <td><input type="number" id="cat-${gig.GigID}" value="${gig.CategoryID}"></td>
+            <td>
+              <button class="action-btn edit-btn" onclick="editGig(${gig.GigID})">Edit</button>
+              <button class="action-btn delete-btn" onclick="deleteGig(${gig.GigID})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function addGig() {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      const price = document.getElementById("price").value;
+      const userId = document.getElementById("userId").value;
+      const categoryId = document.getElementById("categoryId").value;
+
+      if (!title || !description || !price || !userId || !categoryId) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      const res = await fetch("http://localhost:5000/gigs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Title: title, Description: description, Price: price, UserID: userId, CategoryID: categoryId })
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchGigs();
+    }
+
+    async function editGig(id) {
+      const Price = document.getElementById(`price-${id}`).value;
+      const CategoryID = document.getElementById(`cat-${id}`).value;
+
+      if (!Price || !CategoryID) {
+        alert("Fields cannot be empty");
+        return;
+      }
+
+      const res = await fetch(`http://localhost:5000/gigs/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Price, CategoryID })
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchGigs();
+    }
+
+    async function deleteGig(id) {
+      if (!confirm("Are you sure you want to delete this gig?")) return;
+      const res = await fetch(`http://localhost:5000/gigs/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      alert(data.message);
+      fetchGigs();
+    }
+
+    fetchGigs();
+  </script>
+</body>
+</html>

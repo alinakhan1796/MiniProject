@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reports & Analytics</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      width: 220px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      text-align: center;
+      color: #333;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background: #28a745;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reports & Analytics</h1>
+
+    <div class="cards">
+      <div class="card" onclick="fetchTopFreelancers()">Top Freelancers by Rating</div>
+      <div class="card" onclick="fetchRevenue()">Total Revenue by Freelancer</div>
+    </div>
+
+    <h2 id="reportTitle">Select a report</h2>
+    <table id="reportTable">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function fetchTopFreelancers() {
+      const res = await fetch("http://localhost:5000/reports/top-freelancers");
+      const data = await res.json();
+      const table = document.getElementById("reportTable");
+      document.getElementById("reportTitle").innerText = "Top Freelancers by Rating";
+      table.innerHTML = "<thead><tr><th>UserID</th><th>UserName</th><th>AverageRating</th></tr></thead><tbody>" +
+        data.map(r => `<tr><td>${r.UserID}</td><td>${r.UserName}</td><td>${r.AvgRating}</td></tr>`).join('') +
+        "</tbody>";
+    }
+
+    async function fetchRevenue() {
+      const res = await fetch("http://localhost:5000/reports/revenue");
+      const data = await res.json();
+      const table = document.getElementById("reportTable");
+      document.getElementById("reportTitle").innerText = "Total Revenue by Freelancer";
+      table.innerHTML = "<thead><tr><th>UserID</th><th>UserName</th><th>TotalRevenue</th></tr></thead><tbody>" +
+        data.map(r => `<tr><td>${r.UserID}</td><td>${r.UserName}</td><td>${r.TotalRevenue}</td></tr>`).join('') +
+        "</tbody>";
+    }
+  </script>
+</body>
+</html>

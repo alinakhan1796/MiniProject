@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Orders</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    input {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .edit-btn { background: #007bff; }
+    .edit-btn:hover { background: #0069d9; }
+
+    .delete-btn { background: #dc3545; }
+    .delete-btn:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Manage Orders</h1>
+
+    <!-- Add Order Form -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>OrderedBy (UserID)</label>
+        <input type="number" id="orderedBy">
+      </div>
+      <div class="form-group">
+        <label>FulfilledBy (UserID)</label>
+        <input type="number" id="fulfilledBy">
+      </div>
+      <div class="form-group" style="align-self:flex-end;">
+        <button onclick="addOrder()">Place Order</button>
+      </div>
+    </div>
+
+    <!-- Orders Table -->
+    <h2>All Orders</h2>
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>OrderID</th>
+          <th>OrderDate</th>
+          <th>OrderedBy</th>
+          <th>FulfilledBy</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function fetchOrders() {
+      const res = await fetch("http://localhost:5000/orders");
+      const data = await res.json();
+      const tbody = document.querySelector("#ordersTable tbody");
+      tbody.innerHTML = "";
+      data.forEach(order => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${order.OrderID}</td>
+            <td>${new Date(order.OrderDate).toLocaleString()}</td>
+            <td><input type="number" id="ordered-${order.OrderID}" value="${order.OrderedBy}"></td>
+            <td><input type="number" id="fulfilled-${order.OrderID}" value="${order.FulfilledBy}"></td>
+            <td>
+              <button class="action-btn edit-btn" onclick="editOrder(${order.OrderID})">Edit</button>
+              <button class="action-btn delete-btn" onclick="deleteOrder(${order.OrderID})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function addOrder() {
+      const OrderedBy = document.getElementById("orderedBy").value;
+      const FulfilledBy = document.getElementById("fulfilledBy").value;
+
+      if (!OrderedBy || !FulfilledBy) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      const res = await fetch("http://localhost:5000/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ OrderedBy, FulfilledBy })
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchOrders();
+    }
+
+    async function editOrder(id) {
+      const OrderedBy = document.getElementById(`ordered-${id}`).value;
+      const FulfilledBy = document.getElementById(`fulfilled-${id}`).value;
+
+      if (!OrderedBy || !FulfilledBy) {
+        alert("Fields cannot be empty");
+        return;
+      }
+
+      const res = await fetch(`http://localhost:5000/orders/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ OrderedBy, FulfilledBy })
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchOrders();
+    }
+
+    async function deleteOrder(id) {
+      if (!confirm("Are you sure you want to delete this order?")) return;
+
+      const res = await fetch(`http://localhost:5000/orders/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      alert(data.message);
+      fetchOrders();
+    }
+
+    fetchOrders();
+  </script>
+</body>
+</html>
