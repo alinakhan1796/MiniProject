@@ -49,11 +49,11 @@ CREATE TABLE Orders (
 
 ### ▶️ Running the Application
 Backend
-Start the server:
-cd backend
-npm install
-node server.js
-Server runs on: http://localhost:5000
+  Start the server:
+  cd backend
+  npm install
+  node server.js
+  Server runs on: http://localhost:5000
 
 Frontend
 Open the dashboard in your browser:
@@ -63,6 +63,10 @@ Frontend: HTML, CSS, JavaScript
 Backend: Node.js, Express.js
 Database: MySQL
 
+### Demo video
+Check out our demo video to see freelance website in action:
+
+[Freelance Demonstration](https://collection.cloudinary.com/dldyzunbj/0d128e4ab53908387d122e2dda370df6)
 ### Authors
 Alina Khan | @AlinaKhan
 
