@@ -63,21 +63,6 @@ Frontend: HTML, CSS, JavaScript
 Backend: Node.js, Express.js
 Database: MySQL
 
-### 🧩 Project Structure
-freelance-platform/
-│
-├── backend/
-│   ├── server.js
-│   ├── package.json
-│   └── .gitignore
-│
-└── frontend/
-    ├── index.html
-    ├── users.html
-    ├── gigs.html
-    ├── orders.html
-    ├── reports.html
-    └── style.css
 ### Authors
 Alina Khan | @AlinaKhan
 
