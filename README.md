@@ -1,43 +1,28 @@
-# 💼 Freelance Platform Dashboard
+# 💻 FreeLance Platform
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-
-🧠 **Freelance Platform Dashboard**  
-A full-stack freelance management system that allows users to manage freelancers, gigs, and orders with real-time data visualization and analytics.
-
----
+FreeLance is a platform where users can post gigs, hire freelancers, and manage orders efficiently.
 
 ## ✨ Features
 
-👥 Manage **Users** — Add / View / Edit / Delete  
-💼 Manage **Gigs** — Add / View / Edit / Delete  
-📦 Manage **Orders** — Add / View / Edit / Delete  
-📊 **Reports & Analytics** — View top freelancers and total revenue  
-🎨 Clean, card-based **Dashboard UI** with responsive design
-
----
+- 📝 Create and manage user accounts
+- 💼 Post and browse gigs
+- 📦 Place and fulfill orders
+- 📊 View reports and analytics
 
 ## 🛠️ Prerequisites
 
-Before running the application, ensure the following are installed:
+Before running the application, ensure you have the following installed:
 
-- **Node.js** (v16 or newer)  
-- **MySQL Server**  
-- **Web Browser (Chrome / Edge)**
+- **Node.js**
+- **npm**
+- **MySQL**
 
----
+## ⚙️ Database Setup
 
-## ⚙️ Setup
-
-### Backend Setup
-```bash
-cd backend
-npm install
-node server.js
-### Database Configuration
+Create the database and tables using the following SQL commands:
+```sql
 CREATE DATABASE FreeLance;
 USE FreeLance;
-
 CREATE TABLE Users (
   UserID INT PRIMARY KEY AUTO_INCREMENT,
   UserName VARCHAR(100),
@@ -60,24 +45,25 @@ CREATE TABLE Orders (
   OrderedBy INT,
   FulfilledBy INT
 );
+``` 
 
-▶️ Running the Application
-Start the Server
+### ▶️ Running the Application
+Backend
+Start the server:
+cd backend
+npm install
 node server.js
 Server runs on: http://localhost:5000
 
-Launch Frontend
-Open:
+Frontend
+Open the dashboard in your browser:
 frontend/index.html
-in your browser to access the dashboard.
+### 🧱 Tech Stack
+Frontend: HTML, CSS, JavaScript
+Backend: Node.js, Express.js
+Database: MySQL
 
-🧱 Tech Stack
-Component	Technology
-Frontend	HTML, CSS, JavaScript
-Backend	Node.js, Express.js
-Database	MySQL
-
-🧩 Project Structure
+### 🧩 Project Structure
 freelance-platform/
 │
 ├── backend/
@@ -92,6 +78,21 @@ freelance-platform/
     ├── orders.html
     ├── reports.html
     └── style.css
+### Authors
+Alina Khan | @AlinaKhan
 
-👨‍💻 Author
-AlinaKhan
+🍴 How to Contribute
+Fork this repository.
+Clone your fork:
+
+git clone https://github.com/alinakhan1796/FreeLance.git
+Make changes and test thoroughly.
+Submit a pull request with a description of your changes.
+
+### 📚 References
+Node.js Documentation
+Express.js Documentation
+MySQL Documentation
+
+### Feedback
+For any feedback or suggestions, reach out at alinakhan1796@gmail.com
